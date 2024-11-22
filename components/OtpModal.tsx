@@ -1,7 +1,7 @@
+"use client";
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -12,12 +12,13 @@ import {
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { LoaderCircle, X } from "lucide-react";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
+import { sendEmailOTP, verifySecret } from "@/lib/actions/users.actions";
+import { useRouter } from "next/navigation";
 
 const OtpModal = ({
   email,
@@ -30,11 +31,14 @@ const OtpModal = ({
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const router = useRouter();
+
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      //verify otp
+      const sessionId = await verifySecret({ accountId, password });
+      if (sessionId) router.push("/");
     } catch (error) {
       console.log("Failed to verify OTP", error);
     }
@@ -42,7 +46,7 @@ const OtpModal = ({
   };
 
   const handleResendOTP = async () => {
-    //call api to handle resend
+    await sendEmailOTP({ email });
   };
 
   return (
@@ -79,7 +83,9 @@ const OtpModal = ({
               {isLoading && <LoaderCircle className="animate-spin" size={24} />}
             </AlertDialogAction>
             <div className="mt-1">
-              <Button variant="link" onClick={handleResendOTP}>Resend</Button>
+              <Button variant="link" onClick={handleResendOTP}>
+                Resend
+              </Button>
             </div>
           </div>
         </AlertDialogFooter>

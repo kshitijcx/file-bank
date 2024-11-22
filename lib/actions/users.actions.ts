@@ -4,6 +4,7 @@ import { ID, Query } from "node-appwrite";
 import { createAdminClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
+import { cookies } from "next/headers";
 
 const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
@@ -21,7 +22,7 @@ const handleError = (error: unknown, message: string) => {
   throw error;
 };
 
-const sendEmailOTP = async ({ email }: { email: string }) => {
+export const sendEmailOTP = async ({ email }: { email: string }) => {
   const { account } = await createAdminClient();
   try {
     const session = await account.createEmailToken(ID.unique(), email);
@@ -42,19 +43,42 @@ export const createAccount = async ({
   const accountId = await sendEmailOTP({ email });
 
   if (!accountId) throw new Error("Failed to send an OTP");
-  if(!existingUser){
-    const {databases} = await createAdminClient();
+  if (!existingUser) {
+    const { databases } = await createAdminClient();
     await databases.createDocument(
-        appwriteConfig.databaseId,
-        appwriteConfig.usersCollectionId,
-        ID.unique(),
-        {
-            fullName,
-            email,
-            avatar:"https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg",
-            accountId
-        }
-    )
+      appwriteConfig.databaseId,
+      appwriteConfig.usersCollectionId,
+      ID.unique(),
+      {
+        fullName,
+        email,
+        avatar:
+          "https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg",
+        accountId,
+      }
+    );
   }
-  return parseStringify({accountId})
+  return parseStringify({ accountId });
+};
+
+export const verifySecret = async ({
+  accountId,
+  password,
+}: {
+  accountId: string;
+  password: string;
+}) => {
+  try {
+    const { account } = await createAdminClient();
+    const session = await account.createSession(accountId, password);
+    (await cookies()).set("appwrite-session", session.secret, {
+      path: "/",
+      httpOnly: true,
+      sameSite: true,
+      secure: true,
+    });
+    return parseStringify({ sessionId: session.$id });
+  } catch (error) {
+    handleError(error, "Failed to verify OTP");
+  }
 };
