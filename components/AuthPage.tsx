@@ -43,7 +43,7 @@ const AuthPage = ({ type }: { type: FormType }) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchemaObj>) => {
-    console.log(values);
+    setLoading(true)
   };
 
   return (
