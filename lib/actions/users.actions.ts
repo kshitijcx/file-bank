@@ -32,10 +32,10 @@ const sendEmailOTP = async ({ email }: { email: string }) => {
 };
 
 export const createAccount = async ({
-  fullname,
+  fullName,
   email,
 }: {
-  fullname: string;
+  fullName: string;
   email: string;
 }) => {
   const existingUser = await getUserByEmail(email);
@@ -49,7 +49,7 @@ export const createAccount = async ({
         appwriteConfig.usersCollectionId,
         ID.unique(),
         {
-            fullname,
+            fullName,
             email,
             avatar:"https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg",
             accountId

@@ -15,13 +15,15 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
+import { createAccount } from "@/lib/actions/users.actions";
+import OtpModal from "./OtpModal";
 
 type FormType = "sign-in" | "sign-up";
 
 const formSchema = (formType: FormType) => {
   return z.object({
     email: z.string().email(),
-    fullname:
+    fullName:
       formType === "sign-up"
         ? z.string().min(2).max(50)
         : z.string().optional(),
@@ -31,19 +33,33 @@ const formSchema = (formType: FormType) => {
 const AuthPage = ({ type }: { type: FormType }) => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [accountId, setAccountId] = useState(null);
 
   const formSchemaObj = formSchema(type);
 
   const form = useForm<z.infer<typeof formSchemaObj>>({
     resolver: zodResolver(formSchemaObj),
     defaultValues: {
-      fullname: "",
+      fullName: "",
       email: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchemaObj>) => {
-    setLoading(true)
+    setLoading(true);
+    setErrorMsg("");
+
+    try {
+      const user = await createAccount({
+        fullName: values.fullName || "",
+        email: values.email,
+      });
+      setAccountId(user.accountId);
+    } catch {
+      setErrorMsg("Failed to create account. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,7 +75,7 @@ const AuthPage = ({ type }: { type: FormType }) => {
           {type === "sign-up" && (
             <FormField
               control={form.control}
-              name="fullname"
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
@@ -95,7 +111,7 @@ const AuthPage = ({ type }: { type: FormType }) => {
           {errorMsg && <p>{errorMsg}</p>}
           {
             <div className="flex justify-center gap-2 font-light text-sm mt-1">
-              <p className="text-gray-400">
+              <p className="text-slate-200">
                 {type === "sign-in"
                   ? "Don't have an account?"
                   : "Already have an account?"}
@@ -110,7 +126,9 @@ const AuthPage = ({ type }: { type: FormType }) => {
           }
         </form>
       </Form>
-      {/* OTP Verification */}
+      {true && (
+        <OtpModal email={form.getValues("email")} accountId={accountId} />
+      )}
     </>
   );
 };
