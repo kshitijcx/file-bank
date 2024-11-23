@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
-import { createAccount } from "@/lib/actions/users.actions";
+import { createAccount, signInUser } from "@/lib/actions/users.actions";
 import OtpModal from "./OtpModal";
 
 type FormType = "sign-in" | "sign-up";
@@ -50,10 +50,13 @@ const AuthPage = ({ type }: { type: FormType }) => {
     setErrorMsg("");
 
     try {
-      const user = await createAccount({
-        fullName: values.fullName || "",
-        email: values.email,
-      });
+      const user =
+        type === "sign-up"
+          ? await createAccount({
+              fullName: values.fullName || "",
+              email: values.email,
+            })
+          : await signInUser({ email: values.email });
       setAccountId(user.accountId);
     } catch {
       setErrorMsg("Failed to create account. Please try again.");
