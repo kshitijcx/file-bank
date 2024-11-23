@@ -4,6 +4,7 @@ import { createAdminClient, createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
@@ -83,16 +84,28 @@ export const verifySecret = async ({
 };
 
 export const getCurrentUser = async () => {
-  const {databases, account} = await createSessionClient();
-  
+  const { databases, account } = await createSessionClient();
+
   const result = await account.get();
 
   const user = await databases.listDocuments(
     appwriteConfig.databaseId,
     appwriteConfig.usersCollectionId,
-    [Query.equal("accountId",[result.$id])]
-  )
+    [Query.equal("accountId", [result.$id])]
+  );
   console.log(user);
-  if(user.total<=0) return null;
-  return parseStringify(user.documents[0])
-}
+  if (user.total <= 0) return null;
+  return parseStringify(user.documents[0]);
+};
+
+export const signOutUser = async () => {
+  const { account } = await createSessionClient();
+  try {
+    await account.deleteSession("current");
+    (await cookies()).delete("appwrite-session");
+  } catch (error) {
+    handleError(error, "Failed to Sign Out User");
+  } finally{
+    redirect('/sign-in')
+  }
+};

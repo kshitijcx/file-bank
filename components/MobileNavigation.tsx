@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import FileUploader from "./FileUploader";
+import { signOutUser } from "@/lib/actions/users.actions";
 
 interface Props {
   ownerId: string;
@@ -41,7 +42,7 @@ const MobileNavigation = ({
         </SheetTrigger>
         <SheetContent>
           <SheetTitle>
-            <div className="flex gap-2 items-center mb-4">
+            <div className="flex gap-2 items-center mb-6">
               <Image
                 width={20}
                 height={20}
@@ -56,7 +57,7 @@ const MobileNavigation = ({
             </div>
           </SheetTitle>
           <nav>
-            <ul className="flex flex-col gap-6">
+            <ul className="flex flex-col gap-5 text-sm">
               {navItems.map((item, index) => (
                 <Link href={item.url} key={index}>
                   <li
@@ -66,14 +67,22 @@ const MobileNavigation = ({
                         : "border border-slate-700"
                     }`}
                   >
-                    <item.icon size={22} />
+                    <item.icon size={20} />
                     {item.name}
                   </li>
                 </Link>
               ))}
-              <li><FileUploader/></li>
               <li>
-                <Button type="submit" variant="secondary">
+                <FileUploader />
+              </li>
+              <li>
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  onClick={async () => {
+                    await signOutUser();
+                  }}
+                >
                   <LogOut />
                 </Button>
               </li>
