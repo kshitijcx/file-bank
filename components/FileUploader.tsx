@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { MouseEvent, useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "./ui/button";
 import { Loader, UploadCloud, X } from "lucide-react";
@@ -17,11 +17,12 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     setFiles(acceptedFiles);
+    
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleRemoveFile = (
-    e: React.MouseEvent<SVGElement>,
+    e: React.MouseEvent<SVGElement, MouseEvent>,
     fileName: string
   ) => {
     e.stopPropagation();
@@ -46,7 +47,9 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
                 className="flex gap-2 text-xs items-center"
               >
                 <Thumbnail type={type} extension={extension} />
-                <p className="w-28 whitespace-nowrap overflow-hidden text-ellipsis">{file.name}</p>
+                <p className="w-28 whitespace-nowrap overflow-hidden text-ellipsis">
+                  {file.name}
+                </p>
                 <Loader size={20} className="animate-spin" />
                 <X
                   size={20}

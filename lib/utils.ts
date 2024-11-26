@@ -1,14 +1,14 @@
-import { clsx, type ClassValue } from "clsx"
-import { File, FileAudio, FileImage, FileVideo } from "lucide-react"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { File, FileAudio, FileImage, FileVideo } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-export const parseStringify = (value:unknown) => {
-  return JSON.parse(JSON.stringify(value))
-}
+export const parseStringify = (value: unknown) => {
+  return JSON.parse(JSON.stringify(value));
+};
 
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
@@ -115,7 +115,7 @@ export const formatDateTime = (isoString: string | null | undefined) => {
 
 export const getFileIcon = (
   extension: string | undefined,
-  type: string,
+  type: FileType | string
 ) => {
   switch (extension) {
     // Document
@@ -126,10 +126,10 @@ export const getFileIcon = (
     case "txt":
     case "xls":
     case "xlsx":
-      return File
+      return File;
     // Image
     case "svg":
-      return FileImage
+      return FileImage;
     // Video
     case "mkv":
     case "mov":
@@ -140,7 +140,7 @@ export const getFileIcon = (
     case "webm":
     case "m4v":
     case "3gp":
-      return FileVideo
+      return FileVideo;
     // Audio
     case "mp3":
     case "mpeg":
@@ -152,20 +152,20 @@ export const getFileIcon = (
     case "m4a":
     case "aiff":
     case "alac":
-      return FileAudio
+      return FileAudio;
 
     default:
       switch (type) {
         case "image":
-          return FileImage
+          return FileImage;
         case "document":
-          return File
+          return File;
         case "video":
-          return FileVideo
+          return FileVideo;
         case "audio":
-          return FileVideo
+          return FileVideo;
         default:
-          return File 
+          return File;
       }
   }
 };
