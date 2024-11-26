@@ -41,6 +41,8 @@ export const createAccount = async ({
 }) => {
   const existingUser = await getUserByEmail(email);
   const accountId = await sendEmailOTP({ email });
+  console.log(existingUser);
+  console.log(accountId);
 
   if (!accountId) throw new Error("Failed to send an OTP");
   if (!existingUser) {

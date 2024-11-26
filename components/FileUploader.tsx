@@ -13,10 +13,9 @@ import { usePathname } from "next/navigation";
 interface Props {
   ownerId: string;
   accountId: string;
-  className?: string;
 }
 
-const FileUploader = ({ ownerId, accountId, className }: Props) => {
+const FileUploader = ({ ownerId, accountId}: Props) => {
   const path = usePathname();
   const { toast } = useToast();
   const [files, setFiles] = useState<File[]>([]);
