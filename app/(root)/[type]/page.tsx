@@ -7,11 +7,11 @@ const page = async ({ params }: SearchParamProps) => {
   const type = ((await params)?.type as string) || "";
   const files = await getFiles();
   return (
-    <div className="px-10">
+    <div className="px-8 pb-4">
       <section>
-        <h1 className="capitalize">{type}</h1>
+        <h1 className="capitalize text-xl font-black mb-3">{type}</h1>
         <div className="flex justify-between">
-          <p>
+          <p className="mb-2">
             Total: <span>0 MB</span>
           </p>
           <div className="flex gap-2">
@@ -21,7 +21,7 @@ const page = async ({ params }: SearchParamProps) => {
         </div>
       </section>
       {files.total > 0 ? (
-        <section>
+        <section className="flex flex-wrap gap-2">
           {files.documents.map((file: Models.Document) => (
             <Card key={file.$id} file={file}/>
           ))}
