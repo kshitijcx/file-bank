@@ -24,6 +24,8 @@ import { Models } from "node-appwrite";
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { usePathname } from "next/navigation";
+import { renameFile } from "@/lib/actions/file.actions";
 
 const ActionDropdown = ({ file }: { file: Models.Document }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,18 +34,32 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
   const [name, setName] = useState(file.name);
   const [isLoading, setIsLoading] = useState(false);
 
+  const path = usePathname();
+
   const closeAllModals = () => {
-    setIsDropdownOpen(false)
-    setIsModalOpen(false)
-    setAction(null)
-    setName(file.name)
+    setIsDropdownOpen(false);
+    setIsModalOpen(false);
+    setAction(null);
+    setName(file.name);
     //setEmails([])
-  }
+  };
 
   const handleActions = async () => {
+    if (!action) return;
+    setIsLoading(true);
+    let success = false;
+    const actions = {
+      rename: () =>
+        renameFile({ fileId: file.$id, name, extension: file.extension, path }),
+      share: () => {},
+      delete: () => {},
+    };
 
-  }
+    success = await actions[action.value as keyof typeof actions]();
+    if (success) closeAllModals();
 
+    setIsLoading(false);
+  };
 
   const renderDialogContent = () => {
     if (!action) return null;
@@ -62,9 +78,11 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
         </DialogHeader>
         {["rename", "delete", "share"].includes(value) && (
           <DialogFooter>
-            <Button onClick={closeAllModals} variant="secondary">Cancel</Button>
+            <Button onClick={closeAllModals} variant="secondary">
+              Cancel
+            </Button>
             <Button onClick={handleActions}>Submit</Button>
-            {isLoading && <Loader size={20} className="animate-spin"/>}
+            {isLoading && <Loader size={20} className="animate-spin" />}
           </DialogFooter>
         )}
       </DialogContent>
