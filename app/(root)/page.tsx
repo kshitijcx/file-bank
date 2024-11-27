@@ -3,8 +3,7 @@ import { getFiles } from "@/lib/actions/file.actions";
 import { Models } from "node-appwrite";
 
 const Home = async () => {
-  const types:any[] = [];
-  const files = await getFiles({ types });
+  const files = await getFiles({ types:[] });
   return (
     <div className="px-8 pb-4">
       <section>
