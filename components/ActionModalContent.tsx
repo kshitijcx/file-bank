@@ -48,11 +48,13 @@ export const ShareInput = ({ file, onInputChange, onRemove }: Props) => {
         {file.users.map((email: string) => (
           <li key={email} className="flex items-center justify-between">
             {email}
-            <Button variant="secondary">
-              <X size={20} onClick={() => onRemove(email)} />
-            </Button>
+            <X
+              size={20}
+              onClick={() => onRemove(email)}
+              className="hover:cursor-pointer"
+            />
           </li>
-        ))} 
+        ))}
       </ul>
     </div>
   );
