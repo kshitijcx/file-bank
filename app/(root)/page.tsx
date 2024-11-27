@@ -10,15 +10,6 @@ const Home = async () => {
     <div className="px-8 pb-4">
       <section>
         <h1 className="capitalize text-xl font-black mb-3">All Files</h1>
-        <div className="flex justify-between">
-          <p className="mb-2">
-            Total: <span>0 MB</span>
-          </p>
-          <div className="flex gap-2">
-            Sort By:
-            <Sort />
-          </div>
-        </div>
       </section>
       {files.total > 0 ? (
         <section className="flex flex-wrap gap-2">

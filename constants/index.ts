@@ -8,7 +8,7 @@ import {
 
 export const navItems = [
   {
-    name: "Dashboard",
+    name: "All Files",
     icon: LayoutDashboard,
     url: "/",
   },

@@ -41,8 +41,6 @@ export const createAccount = async ({
 }) => {
   const existingUser = await getUserByEmail(email);
   const accountId = await sendEmailOTP({ email });
-  console.log(existingUser);
-  console.log(accountId);
 
   if (!accountId) throw new Error("Failed to send an OTP");
   if (!existingUser) {
@@ -95,7 +93,6 @@ export const getCurrentUser = async () => {
     appwriteConfig.usersCollectionId,
     [Query.equal("accountId", [result.$id])]
   );
-  console.log(user);
   if (user.total <= 0) return null;
   return parseStringify(user.documents[0]);
 };

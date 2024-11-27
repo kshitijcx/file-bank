@@ -10,19 +10,13 @@ const page = async ({ searchParams, params }: SearchParamProps) => {
   const searchText = ((await searchParams)?.query as string) || "";
   const sort = ((await searchParams)?.sort as string) || "";
 
-  const files = await getFiles({ types,searchText,sort });
+  const files = await getFiles({ types, searchText, sort });
   return (
     <div className="px-8 pb-4">
-      <section>
+      <section className="mb-3">
         <h1 className="capitalize text-xl font-black mb-3">{type}</h1>
-        <div className="flex justify-between">
-          <p className="mb-2">
-            Total: <span>0 MB</span>
-          </p>
-          <div className="flex gap-2">
-            Sort By:
-            <Sort />
-          </div>
+        <div className="w-fit">
+          <Sort />
         </div>
       </section>
       {files.total > 0 ? (
