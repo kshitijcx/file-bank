@@ -1,11 +1,16 @@
 import Card from "@/components/Card";
 import Sort from "@/components/Sort";
 import { getFiles } from "@/lib/actions/file.actions";
+import { getFileTypesParams } from "@/lib/utils";
 import { Models } from "node-appwrite";
 
-const page = async ({ params }: SearchParamProps) => {
+const page = async ({ searchParams, params }: SearchParamProps) => {
   const type = ((await params)?.type as string) || "";
-  const files = await getFiles();
+  const types = getFileTypesParams(type) as FileType[];
+  const searchText = ((await searchParams)?.query as string) || "";
+  const sort = ((await searchParams)?.sort as string) || "";
+
+  const files = await getFiles({ types,searchText,sort });
   return (
     <div className="px-8 pb-4">
       <section>
@@ -23,7 +28,7 @@ const page = async ({ params }: SearchParamProps) => {
       {files.total > 0 ? (
         <section className="flex flex-wrap gap-2">
           {files.documents.map((file: Models.Document) => (
-            <Card key={file.$id} file={file}/>
+            <Card key={file.$id} file={file} />
           ))}
         </section>
       ) : (

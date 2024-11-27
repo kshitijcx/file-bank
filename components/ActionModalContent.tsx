@@ -3,7 +3,6 @@ import FormattedDateTime from "./FormattedDateTime";
 import { convertFileSize } from "@/lib/utils";
 import React from "react";
 import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 import { X } from "lucide-react";
 
 export const FileDetails = ({ file }: { file: Models.Document }) => {
