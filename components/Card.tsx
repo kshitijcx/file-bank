@@ -11,7 +11,7 @@ const Card = ({ file }: { file: Models.Document }) => {
       <Link
         href={file.url}
         target="_blank"
-        className="border-2 w-40 h-40 text-xs flex flex-col justify-between p-3"
+        className="border-2 sm:w-40 sm:h-40 text-xs flex flex-col justify-between p-3 max-sm:px-8 max-sm:py-5"
       >
         <div>
           <Thumbnail type={file.type} extension={file.extension} size="40" />

@@ -12,7 +12,7 @@ const Home = async () => {
         <h1 className="capitalize text-xl font-black mb-3">All Files</h1>
       </section>
       {files.total > 0 ? (
-        <section className="flex flex-wrap gap-2">
+        <section className="flex flex-wrap gap-2 max-sm:flex-col max-sm:gap-4">
           {files.documents.map((file: Models.Document) => (
             <Card key={file.$id} file={file} />
           ))}

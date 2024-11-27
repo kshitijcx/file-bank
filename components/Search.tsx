@@ -15,7 +15,7 @@ const Search = () => {
 
   const [debouncedQuery] = useDebounce(query, 300);
 
-  const [results, setResults] = useState<Models.Document>([]);
+  const [results, setResults] = useState<Models.Document[]>([]);
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
